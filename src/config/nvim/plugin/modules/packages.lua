@@ -4,4 +4,4 @@ local packages = Module.new("packages", "<space>P")
 -- MAPPINGS
 --
 
-packages:map("u", vim.pack.update)
+packages:map("u", vim.pack.update, [[update packages]])
