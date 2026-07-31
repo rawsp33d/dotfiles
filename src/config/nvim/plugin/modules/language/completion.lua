@@ -23,6 +23,7 @@ vim.opt.wildoptions = { "pum", "fuzzy" }
 
 local servers = {
 	"bashls",
+	"buf_ls",
 	"copilot",
 	"csharp_ls",
 	"emmylua_ls",

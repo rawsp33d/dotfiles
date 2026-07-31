@@ -63,6 +63,7 @@ mini_clue.setup({
 
 		-- modes
 		{ mode = "n", keys = "<space>" },
+		{ mode = "n", keys = "<plug>(sync)" },
 	},
 
 	clues = {
@@ -73,9 +74,6 @@ mini_clue.setup({
 		mini_clue.gen_clues.registers(),
 		mini_clue.gen_clues.windows(),
 		mini_clue.gen_clues.z(),
-
-		-- modes
-		{ mode = "n", keys = "<space>", desc = "+Modules" },
 	},
 })
 
