@@ -108,32 +108,32 @@ require("dial.config").augends:register_group({
 -- enhancements
 
 -- delete word
-map("<c-backspace>", "<c-w>", { "i" })
+map("<c-backspace>", "<c-w>", { "i", desc = "delete word" })
 
 -- redo
-map("U", "<c-r>")
+map("U", "<c-r>", "redo")
 
 -- jump forth
-map("<c-u>", "<c-i>")
+map("<c-u>", "<c-i>", "jump forth")
 
 -- find
-map("<leader>/", [[/\v]], "", { silent = false })
+map("<leader>/", [[/\v]], "very magic find")
 
 -- increment/decrement
 local dial = require "dial.map"
-map("<c-a>", dial.inc_normal())
-map("<c-x>", dial.dec_normal())
+map("<c-a>", dial.inc_normal(), "increment")
+map("<c-x>", dial.dec_normal(), "decrement")
 
 local mini_pick = require "mini.pick"
-code:map("s", mini_pick.registry.spellsuggest)
+code:map("s", mini_pick.registry.spellsuggest, "pick: spelling")
 
-map("grd", vim.lsp.buf.definition)
-map("grf", vim.lsp.buf.format)
+map("grd", vim.lsp.buf.definition, "lsp: goto definition")
+map("grf", vim.lsp.buf.format, "lsp: fmt")
 
--- spaces -> tabs
+ -- spaces -> tabs
 code:map("t", function()
 	vim.cmd("%s/    /\t/")
-end)
+end, "4 spaces -> tabs")
 
 --
 -- EVENTS

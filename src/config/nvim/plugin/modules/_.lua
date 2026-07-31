@@ -12,6 +12,7 @@ pack "nvim-mini/mini.nvim"
 --- @field group int augroup
 Module = {}
 Module.__index = Module
+Module.registry = {}
 
 --- Create a Mode.
 --- @param name string Name of the module.
@@ -23,6 +24,7 @@ function Module.new(name, seq)
 	self.seq = seq or ""
 	self.prefix = "<plug>(" .. self.name .. ")"
 	self.group = vim.api.nvim_create_augroup(self.name, {})
+	table.insert(Module.registry, self)
 
 	if seq ~= nil then
 		map(self.seq, self.prefix, { "x", "n", "o", desc = self.name .. " module" })

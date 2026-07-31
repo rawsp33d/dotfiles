@@ -126,36 +126,36 @@ end
 map("<c-i>", "<c-i>")
 
 -- quit
-app:map("q", cmd "quitall")
-app:map("Q", cmd "quitall!")
+app:map("q", cmd "quitall", ":quitall")
+app:map("Q", cmd "quitall!", ":quitall!")
 
 -- error
-app:map("e", cmd "cquit")
-app:map("E", cmd "cquit!")
+app:map("e", cmd "cquit", ":cquit")
+app:map("E", cmd "cquit!", ":cquit!")
 
 -- write
-app:map("w", cmd "wall")
-app:map("W", cmd "wall!")
+app:map("w", cmd "wall", ":wall")
+app:map("W", cmd "wall!", ":wall!")
 
 -- exit
-app:map("x", cmd "xall")
-app:map("X", cmd "xall!")
+app:map("x", cmd "xall", ":xall")
+app:map("X", cmd "xall!", ":xall!")
 
 -- close
-app:map("c", cmd "bufdo bdelete")
-app:map("C", cmd "bufdo bdelete!")
+app:map("c", cmd "bufdo bdelete", ":bufdo bdelete")
+app:map("C", cmd "bufdo bdelete!", ":bufdo bdelete!")
 
 -- reload
 -- app:map("r", reload)
-app:map("R", cmd "restart")
+app:map("R", cmd "restart", ":restart")
 
 -- messages
-app:map("m", cmd "messages")
-app:map("M", cmd "messages clear")
+app:map("m", cmd "messages", ":messages")
+app:map("M", cmd "messages clear", ":messages clear")
 
 -- picker
-app:map(".", mini_pick.registry.resume)
-app:map(":", mini_pick.registry.commands)
-app:map("<space>", mini_pick.registry.registry)
-app:map("h", mini_pick.registry.help)
-app:map("k", mini_pick.registry.keymaps)
+app:map(".", mini_pick.registry.resume, "pick: resume")
+app:map(":", mini_pick.registry.commands, "pick: commands")
+app:map("<space>", mini_pick.registry.registry, "pick: registry")
+app:map("h", mini_pick.registry.help, "pick: help")
+app:map("k", mini_pick.registry.keymaps, "pick: keymaps")

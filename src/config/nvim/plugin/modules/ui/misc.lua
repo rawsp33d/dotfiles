@@ -23,49 +23,47 @@ require("mini.notify").setup()
 require("mini.statusline").setup()
 require("mini.tabline").setup()
 
--- clues
+local triggers = {
+	-- follow the leader
+	{ mode = "n", keys = "<leader>" },
+	{ mode = "x", keys = "<leader>" },
+	-- `[` and `]` keys
+	{ mode = 'n', keys = '[' },
+	{ mode = 'n', keys = ']' },
+	-- completions
+	{ mode = "i", keys = "<c-x>" },
+	-- goto
+	{ mode = "n", keys = "g" },
+	{ mode = "x", keys = "g" },
+	-- marks
+	{ mode = "n", keys = "'" },
+	{ mode = "n", keys = "`" },
+	{ mode = "x", keys = "'" },
+	{ mode = "x", keys = "`" },
+	-- registers
+	{ mode = "n", keys = '"' },
+	{ mode = "x", keys = '"' },
+	{ mode = "i", keys = "<c-r>" },
+	{ mode = "c", keys = "<c-r>" },
+	-- windows
+	{ mode = "n", keys = "<c-w>" },
+	-- folds
+	{ mode = "n", keys = "z" },
+	{ mode = "x", keys = "z" },
+	-- modes
+	{ mode = "n", keys = "<space>" },
+}
+
+-- add modules
+for _, m in ipairs(Module.registry) do
+	if m.seq ~= "" then
+		table.insert(triggers, { mode = "n", keys = m.prefix })
+	end
+end
+
 local mini_clue = require "mini.clue"
 mini_clue.setup({
-	triggers = {
-		-- follow the leader
-		{ mode = "n", keys = "<leader>" },
-		{ mode = "x", keys = "<leader>" },
-
-		-- `[` and `]` keys
-		{ mode = 'n', keys = '[' },
-		{ mode = 'n', keys = ']' },
-
-		-- completions
-		{ mode = "i", keys = "<c-x>" },
-
-		-- goto
-		{ mode = "n", keys = "g" },
-		{ mode = "x", keys = "g" },
-
-		-- marks
-		{ mode = "n", keys = "'" },
-		{ mode = "n", keys = "`" },
-		{ mode = "x", keys = "'" },
-		{ mode = "x", keys = "`" },
-
-		-- registers
-		{ mode = "n", keys = '"' },
-		{ mode = "x", keys = '"' },
-		{ mode = "i", keys = "<c-r>" },
-		{ mode = "c", keys = "<c-r>" },
-
-		-- windows
-		{ mode = "n", keys = "<c-w>" },
-
-		-- folds
-		{ mode = "n", keys = "z" },
-		{ mode = "x", keys = "z" },
-
-		-- modes
-		{ mode = "n", keys = "<space>" },
-		{ mode = "n", keys = "<plug>(sync)" },
-	},
-
+	triggers = triggers,
 	clues = {
 		mini_clue.gen_clues.square_brackets(),
 		mini_clue.gen_clues.builtin_completion(),
