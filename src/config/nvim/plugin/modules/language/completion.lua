@@ -93,11 +93,11 @@ require("copilot").setup({})
 --
 
 -- file completion
-map("<a-f>", call(feedkeys, "<c-x><c-f>"), "i")
+map("<a-f>", call(feedkeys, "<c-x><c-f>"), { "i" })
 
 -- better command-line history (or at least different)
-map("<up>", "<end><c-u><up>", "c")
-map("<down>", "<end><c-u><down>", "c")
+map("<up>", "<end><c-u><up>", { "c" })
+map("<down>", "<end><c-u><down>", { "c" })
 
 local mini_map = require("mini.keymap").map_multistep
 mini_map("i", "<cr>", { "pmenu_accept", "minipairs_cr" })
@@ -119,7 +119,7 @@ local next_steps = { {
 mini_map("i", "<c-n>", next_steps)
 
 -- Inside a snippet, use backspace to remove the placeholder.
-map("<bs>", "<c-o>s", "s")
+map("<bs>", "<c-o>s", { "s" })
 
 -- inline completions
 

@@ -25,4 +25,4 @@ terminal:map("l", function()
 end)
 
 -- breakout.exe of terminal mode
-map("<c-esc>", [[<c-\><c-n>]], "t")
+map("<c-esc>", [[<c-\><c-n>]], { "t" })

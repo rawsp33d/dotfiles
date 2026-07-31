@@ -6,8 +6,8 @@ local registers = Module.new("registers", "<space>r")
 
 -- fit in with mini.nvim
 map("gP", [["+P]])
-map("gY", [["+Y]], { "n", "x" }, { remap = true })
-map("g:", [["+g.]], { "n", "x" }, { remap = true })
+map("gY", [["+Y]], { "n", "x", remap = true })
+map("g:", [["+g.]], { "n", "x", remap = true })
 
 -- system clipboard [CLIPBOARD]
 registers:map("", [["+]])

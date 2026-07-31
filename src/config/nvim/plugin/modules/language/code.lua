@@ -108,7 +108,7 @@ require("dial.config").augends:register_group({
 -- enhancements
 
 -- delete word
-map("<c-backspace>", "<c-w>", "i")
+map("<c-backspace>", "<c-w>", { "i" })
 
 -- redo
 map("U", "<c-r>")

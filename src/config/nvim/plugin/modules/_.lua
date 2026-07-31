@@ -25,13 +25,13 @@ function Module.new(name, seq)
 	self.group = vim.api.nvim_create_augroup(self.name, {})
 
 	if seq ~= nil then
-		map(self.seq, self.prefix, { "x", "n", "o" }, { desc = self.name .. " module" })
+		map(self.seq, self.prefix, { "x", "n", "o", desc = self.name .. " module" })
 	end
 
 	return self
 end
 
 --- Map key in mode.
-function Module:map(seq, action, modes, cfg)
-	map(self.prefix .. seq, action, modes, cfg)
+function Module:map(seq, action, opts)
+	map(self.prefix .. seq, action, opts)
 end

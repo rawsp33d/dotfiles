@@ -1,16 +1,17 @@
 --- Map wrapper.
---- FIX: these should be passing "" to map, not "n". map needs to check for nil or something
 --- @param seq string
 --- @param action string|function
---- @param mode? string|string[]
---- @param cfg? string|table
-function map(seq, action, mode, cfg)
-	mode = mode or "n"
-	cfg = cfg or {}
+--- @param opts? string|table description, or opts with modes as array items
+function map(seq, action, opts)
+	if type(opts) == "string" then opts = { desc = opts } end
+	opts = opts or {}
 
-	if cfg.silent == nil then cfg.silent = true end
+	local modes = #opts > 0 and {} or "n"
+	for i = #opts, 1, -1 do modes[i], opts[i] = opts[i], nil end
 
-	vim.keymap.set(mode, seq, action, cfg)
+	if opts.silent == nil then opts.silent = true end
+
+	vim.keymap.set(modes, seq, action, opts)
 end
 
 --- Helper function to make nvim commands for mapping.

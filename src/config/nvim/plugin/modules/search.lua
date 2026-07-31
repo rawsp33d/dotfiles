@@ -16,8 +16,8 @@ search:map("<space>", cmd "nohlsearch")
 search:map("/", cmd "set hlsearch")
 
 -- clear highlighting
-map("<a-cr>", "<cr>:nohlsearch<cr>", "c")
+map("<a-cr>", "<cr>:nohlsearch<cr>", { "c" })
 
 -- search for selection
-map("/", [["vy/<c-r>v]], "v")
-map("?", [["vy?<c-r>v]], "v")
+map("/", [["vy/<c-r>v]], { "v" })
+map("?", [["vy?<c-r>v]], { "v" })
