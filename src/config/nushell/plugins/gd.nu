@@ -24,7 +24,7 @@ export def projects [] {
 }
 
 # Run project.
-export def run [
+export def start [
 	--headless (-H) # Run in headless mode.
 ] {
 	godot ...(args [

@@ -7,6 +7,14 @@ pack "smoka7/hop.nvim"
 local hop = require "hop"
 
 --
+-- SETTINGS
+--
+
+vim.api.nvim_set_hl(0, "MiniJump2dSpot", { reverse = true })
+vim.api.nvim_set_hl(0, "MiniJump2dSpotAhead", { reverse = true })
+vim.api.nvim_set_hl(0, "MiniJump2dSpotUnique", { reverse = true })
+
+--
 -- SETUP
 --
 
@@ -18,11 +26,23 @@ require("mini.operators").setup({
 	},
 })
 
+require("mini.jump").setup()
+local jump2d = require("mini.jump2d")
+jump2d.setup({
+	spotter = jump2d.gen_spotter.union(jump2d.builtin_opts.word_start.spotter, jump2d.gen_spotter.pattern(".+", "end")),
+	labels = [[abcdefghijklmnopqrstuvwxyz]],
+	-- labels = [[cnisetahywodulxfjmkr,.-/]],
+	view = { n_steps_ahead = 2 },
+	allowed_windows = { not_current = false },
+	mappings = {
+		start_jumping = "<cr>"
+	},
+})
+
 require("mini.ai").setup({
 	custom_textobjects = {
 		-- current line/row
 		r = require("mini.extra").gen_ai_spec.line(),
-
 		-- brackets
 		b = { { '%b()', '%b[]', '%b{}', '%b<>' }, '^.().*().$' },
 	}
@@ -36,7 +56,7 @@ vto.setup({
 })
 
 hop.setup({
-	keys = [[cnisetahywodulxfjmkr,.-/]]
+	keys = [[cnisetahywodulxfjmkr,.-/]],
 })
 
 --
@@ -66,7 +86,7 @@ map("<leader>b", function() spider.motion("b") end)
 map("<leader>e", function() spider.motion("e") end)
 map("<leader>w", function() spider.motion("w") end)
 
--- hop
+-- jump
 
 local hop_yank = require "hop-yank"
 local hints = require("hop.hint").HintDirection

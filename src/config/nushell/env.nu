@@ -58,7 +58,7 @@ def prompt_right [] {
 		[
 			(ansi reset)
 			(ansi magenta)
-			(date now | format date "%X")
+			(date now | format date "%T")
 		]
 		| str join | str replace --regex --all "([/:])" $"(ansi green)${1}(ansi magenta)"
 	)

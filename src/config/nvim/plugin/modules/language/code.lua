@@ -126,6 +126,9 @@ map("<c-x>", dial.dec_normal(), [[decrement]])
 
 local mini_pick = require "mini.pick"
 code:map("s", mini_pick.registry.spellsuggest, [[pick: spelling]])
+code:map("d", function()
+	mini_pick.registry.lsp({ scope = "document_symbol"})
+end, [[pick: doc symbols]])
 
 map("grd", vim.lsp.buf.definition, [[lsp: goto definition]])
 map("grf", vim.lsp.buf.format, [[lsp: fmt]])

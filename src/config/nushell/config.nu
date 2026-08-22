@@ -18,6 +18,7 @@ $env.config.edit_mode = "vi"
 $env.config.show_banner = false
 $env.config.use_kitty_protocol = true
 $env.config.highlight_resolved_externals = true
+$env.config.max_last_result_size = 1MB
 
 $env.config.history.file_format = "sqlite"
 $env.config.history.max_size = 5_000_000

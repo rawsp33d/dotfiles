@@ -123,11 +123,12 @@ map("<bs>", "<c-o>s", { "s" })
 
 -- inline completions
 
-map("<c-t>", function()
+map("<a-e>", function()
 	if not vim.lsp.inline_completion.get() then
-		return "<c-t>"
+		return "<a-e>"
 	end
-end, "i", {
+end, {
+	"i",
 	expr = true,
 	replace_keycodes = true,
 	desc = "Get the current inline completion",
@@ -138,7 +139,8 @@ map("<left>", function()
 		return "<left>"
 	end
 	vim.lsp.inline_completion.select({ count = -1 })
-end, "i", {
+end, {
+	"i",
 	expr = true,
 	replace_keycodes = true,
 	desc = "Get the previous inline completion",

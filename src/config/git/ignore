@@ -8,5 +8,5 @@
 
 # apps
 
-**/.claude/settings*.json
+/.claude/
 /CLAUDE.md

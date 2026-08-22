@@ -131,6 +131,7 @@
 	mkdir = "!sh -c 'mkdir -p $1; touch $1/.gitkeep; git add $1' -"
 	man = help
 	cat = show
+	last = show -s --format=%s
 
 	# STATE
 

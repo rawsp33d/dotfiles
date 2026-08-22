@@ -147,7 +147,8 @@ app:map("C", cmd "bufdo bdelete!", [[:bufdo bdelete!]])
 
 -- reload
 -- app:map("r", reload)
-app:map("R", cmd "restart", [[:restart]])
+app:map("r", cmd "restart", [[:restart]])
+app:map("R", cmd "restart!", [[:restart!]])
 
 -- messages
 app:map("m", cmd "messages", [[:messages]])

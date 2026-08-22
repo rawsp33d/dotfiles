@@ -30,25 +30,25 @@ yazi.setup({
 --
 
 -- choose
-files:map("c", function() mini_pick.registry.files({ tool = "fd" }) end)
+files:map("c", function() mini_pick.registry.files({ tool = "fd" }) end, [[pick files]])
 files:map("C", function()
 	mini_pick.registry.cli({
 		command = { "fd", "--hidden", "--type", "f" },
 	})
-end)
+end, [[pick hidden files]])
 
 -- git
-files:map("g", mini_pick.registry.git_files)
+files:map("g", mini_pick.registry.git_files, [[pick git files]])
 
 -- open explorer at file's cwd
-files:map("<space>", yazi.yazi)
+files:map("<space>", yazi.yazi, [[explore]])
 -- open explorer at git root dir
-files:map("<a-space>", call(yazi.yazi, nil, vim.fn.getcwd()))
+files:map("<a-space>", call(yazi.yazi, nil, vim.fn.getcwd()), [[explore root]])
 
 -- recents
-files:map("r", call(mini_pick.registry.oldfiles, { current_dir = true }))
-files:map("R", mini_pick.registry.oldfiles)
+files:map("r", call(mini_pick.registry.oldfiles, { current_dir = true }), [[pick recents]])
+files:map("R", mini_pick.registry.oldfiles, [[pick global recents]])
 
 -- search
-files:map("s", mini_pick.registry.grep_live)
-files:map("S", mini_pick.registry.grep)
+files:map("s", mini_pick.registry.grep_live, [[search live]])
+files:map("S", mini_pick.registry.grep, [[search]])

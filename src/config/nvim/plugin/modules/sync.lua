@@ -38,6 +38,9 @@ gitsigns.setup({
 		hunks:map("r", function()
 			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
 		end, { "v", desc = [[reset selected hunk]] })
+		hunks:map("L", function()
+			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line(".") })
+		end, [[reset line]])
 
 		-- un/stage buffer
 		hunks:map("S", gitsigns.stage_buffer, [[un/stage entire buffer]])

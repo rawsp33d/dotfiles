@@ -1,4 +1,4 @@
-pack "https://github.com/folke/snacks.nvim"
+pack "folke/snacks.nvim"
 
 local persist = require "persistence"
 
