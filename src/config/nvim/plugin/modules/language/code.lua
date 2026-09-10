@@ -114,7 +114,7 @@ map("<c-backspace>", "<c-w>", { "i", desc = [[delete word]] })
 map("U", "<c-r>", [[redo]])
 
 -- jump forth
-map("<c-u>", "<c-i>", [[jump forth]])
+map("<c-u>", "<c-i>", { "i", desc = [[jump forth]] })
 
 -- find
 map("<leader>/", [[/\v]], [[very magic find]])

@@ -141,6 +141,13 @@ end)
 -- sneaking
 motion:map("<tab>", hop.hint_char1)
 motion:map("<cr>", hop.hint_char2)
+map("<cr>", function()
+	if vim.bo.buftype == "quickfix" then
+		feedkeys("<cr>")
+	else
+		flash.jump()
+	end
+end, { "n", desc = [[jump]]})
 
 -- characters
 motion:map("f", function()

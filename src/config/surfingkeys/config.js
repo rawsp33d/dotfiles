@@ -24,7 +24,7 @@ function options() {
 
 function mappings() {
 	// DEBUG
-	api.mapkey("<Backspace>", "#0 debug", () => {
+	api.mapkey("<Backspace>d", "#0 debug", () => {
 		console.log("api", api);
 		console.log("settings", settings);
 	});
@@ -67,6 +67,9 @@ function unmappings() {
 	api.unmap("C");
 	api.unmap("d");
 	api.unmap("D");
+
+	// slop
+	api.unmap("<Space>t");
 
 	// disable emojis
 	api.iunmap(":");

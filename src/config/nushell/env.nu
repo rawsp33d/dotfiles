@@ -134,8 +134,11 @@ $env.XCURSOR_SIZE = 32
 ## langs
 ##
 
+# oi
+$env.OI_HOME = "~/.oi" | path expand
+
 # nodejs
-$env.N_PREFIX = "~/local"
+$env.N_PREFIX = "~/local" | path expand
 
 # vlang
 # $env.VROOT = "/usr/local/bin/v"
@@ -156,7 +159,7 @@ $env.FZF_DEFAULT_OPTS = ([
 	] | str join " ")
 
 # steam
-$env.STEAM_COMPAT_CLIENT_INSTALL_PATH = "~/.local/share/Steam/"
+$env.STEAM_COMPAT_CLIENT_INSTALL_PATH = "~/.local/share/Steam/" | path expand
 # $env.STEAM_COMPAT_DATA_PATH = "/media/data/games/proton/"
 
 # godot
