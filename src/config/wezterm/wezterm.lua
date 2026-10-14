@@ -84,7 +84,8 @@ config.force_reverse_video_cursor = true
 
 -- more native keys
 config.enable_csi_u_key_encoding = true
-config.enable_kitty_keyboard = true
+-- FIX: still breaks shifted keys in some TUI apps
+-- config.enable_kitty_keyboard = true
 
 -- quick select keys
 config.quick_select_alphabet = "cieansthbyouvwdl,kj.rm"

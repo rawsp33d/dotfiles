@@ -8,5 +8,9 @@
 
 # apps
 
+.code-review-graph/
+.mcp.json
 /.claude/
+/AGENTS.md
 /CLAUDE.md
+opencode.json*

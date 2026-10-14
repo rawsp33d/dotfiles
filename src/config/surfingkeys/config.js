@@ -24,7 +24,7 @@ function options() {
 
 function mappings() {
 	// DEBUG
-	api.mapkey("<Backspace>d", "#0 debug", () => {
+	api.mapkey("<Backspace><Space>", "#0 debug", () => {
 		console.log("api", api);
 		console.log("settings", settings);
 	});

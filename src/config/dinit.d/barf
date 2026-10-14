@@ -1,5 +1,5 @@
 type = process
-command = /usr/local/bin/barf
+command = /usr/local/bin/barf daemon
 restart = true
 logfile = ./logs/barf.log
 env-file = ./.env

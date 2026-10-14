@@ -1,7 +1,7 @@
 [user]
 	name = Ross Hadden
 	email = rosshadden@gmail.com
-	signingkey = 6B19DFDE659EC841
+	signingKey = 6B19DFDE659EC841
 
 [core]
 	autocrlf = input
@@ -21,6 +21,9 @@
 
 [rerere]
 	enabled = true
+
+[commit]
+	gpgsign = true
 
 [diff]
 	tool = diffconflicts
@@ -84,6 +87,7 @@
 	rb = rebase
 	s  = status -sb
 	t  = tag
+	wt = worktree
 
 	# show current branch commits
 	sb = !ls .git/refs/remotes/*/$(git pwd) | cut -d/ -f4,5 | xargs git show-branch $(git pwd)
@@ -132,6 +136,7 @@
 	man = help
 	cat = show
 	last = show -s --format=%s
+	wc = !sh -c 'git grep ^ | wc -l'
 
 	# STATE
 
@@ -182,6 +187,7 @@
 	news = !git lgs HEAD..FETCH_HEAD
 	report = log --reverse --author=Ross --no-merges --format=format:\"%s%n    %b\"
 	report-new = !sh -c 'git --no-pager log --reverse --author=Ross --no-merges --format=format:"%s%n    %b" origin/$(git pwd)..$(git pwd)' -
+
 [protocol "file"]
 	allow = always
 [credential "https://github.com"]

@@ -1,0 +1,4 @@
+type = internal
+depends-on = ai-ollama
+depends-on = ai-fcc
+depends-on = ai-omniroute

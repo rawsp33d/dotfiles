@@ -2,8 +2,10 @@ local motion = Module.new("motion", "<tab>")
 
 pack "chrisgrieser/nvim-spider"
 pack "chrisgrieser/nvim-various-textobjs"
+pack "folke/flash.nvim"
 pack "smoka7/hop.nvim"
 
+local flash = require "flash"
 local hop = require "hop"
 
 --
@@ -26,19 +28,6 @@ require("mini.operators").setup({
 	},
 })
 
-require("mini.jump").setup()
-local jump2d = require("mini.jump2d")
-jump2d.setup({
-	spotter = jump2d.gen_spotter.union(jump2d.builtin_opts.word_start.spotter, jump2d.gen_spotter.pattern(".+", "end")),
-	labels = [[abcdefghijklmnopqrstuvwxyz]],
-	-- labels = [[cnisetahywodulxfjmkr,.-/]],
-	view = { n_steps_ahead = 2 },
-	allowed_windows = { not_current = false },
-	mappings = {
-		start_jumping = "<cr>"
-	},
-})
-
 require("mini.ai").setup({
 	custom_textobjects = {
 		-- current line/row
@@ -53,6 +42,19 @@ vto.setup({
 	keymaps = {
 		useDefaults = false
 	}
+})
+
+flash.setup({
+	labels = [[abcdefghijklmnopqrstuvwxyz]],
+	-- labels = [[cnisetahywodulxfjmkr,.-/]],
+	modes = {
+		search = {
+			enabled = true,
+		},
+		char = {
+			jump_labels = false,
+		},
+	},
 })
 
 hop.setup({

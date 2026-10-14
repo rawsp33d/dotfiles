@@ -29,7 +29,7 @@ gitsigns.setup({
 		hunks:map("s", function()
 			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
 		end, { "v", desc = [[un/stage selected hunk]] })
-		hunks:map("l", function()
+		hunks:map("1", function()
 			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line(".") })
 		end, [[un/stage line]])
 
@@ -38,7 +38,7 @@ gitsigns.setup({
 		hunks:map("r", function()
 			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
 		end, { "v", desc = [[reset selected hunk]] })
-		hunks:map("L", function()
+		hunks:map("0", function()
 			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line(".") })
 		end, [[reset line]])
 
