@@ -75,38 +75,38 @@ gitsigns.setup({
 -- MAPPINGS
 --
 
-local tigs = utils.Term:new({
-	cmd = "tig status",
+local gitui = utils.Term:new({
+	cmd = "gitui",
 	persist_mode = true,
 })
 
 sync:map("<space>", function()
-	tigs:toggle "float"
-end, [[tig status (floating)]])
+	gitui:toggle "float"
+end, [[gitui (floating)]])
 
 sync:map("t", function()
-	tigs:toggle "tab"
-end, [[tig status (tab)]])
+	gitui:toggle "tab"
+end, [[gitui (tab)]])
 
 sync:map("w", function()
-	tigs:toggle "window"
-end, [[tig status (new window)]])
+	gitui:toggle "window"
+end, [[gitui (new window)]])
 
 sync:map("j", function()
-	tigs:toggle "below"
-end, [[tig status (below)]])
+	gitui:toggle "below"
+end, [[gitui (below)]])
 
 sync:map("k", function()
-	tigs:toggle "above"
-end, [[tig status (above)]])
+	gitui:toggle "above"
+end, [[gitui (above)]])
 
 sync:map("h", function()
-	tigs:toggle "left"
-end, [[tig status (left)]])
+	gitui:toggle "left"
+end, [[gitui (left)]])
 
 sync:map("l", function()
-	tigs:toggle "right"
-end, [[tig status (right)]])
+	gitui:toggle "right"
+end, [[gitui (right)]])
 
 local gitui = utils.Term:new({
 	cmd = "gitui",

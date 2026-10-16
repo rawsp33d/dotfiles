@@ -19,9 +19,18 @@ vim.o.scrolloff = 4
 --
 
 require("mini.cursorword").setup()
-require("mini.notify").setup()
 require("mini.statusline").setup()
 require("mini.tabline").setup()
+
+require('mini.notify').setup({
+	window = {
+		config = function()
+			local has_statusline = vim.o.laststatus > 0
+			local pad = vim.o.cmdheight + (has_statusline and 1 or 0)
+			return { anchor = 'SE', col = vim.o.columns, row = vim.o.lines - pad }
+		end
+	}
+})
 
 local triggers = {
 	-- follow the leader
