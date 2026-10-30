@@ -175,7 +175,7 @@ export def main [] {
 			source: { |buffer, position|
 				fd --type f --hidden | rg $buffer
 				| lines
-				| each { |it| { value: $it } }
+				| each { { value: $in } }
 			}
 		}
 
