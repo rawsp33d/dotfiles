@@ -4,7 +4,7 @@ def "refresh workspaces" [] {
 	hyprctl workspaces -j
 	| from json
 	| where name !~ special:
-	| sort-by id
+	| sort-by id?
 	| to json --raw
 	| update workspaces $in
 
@@ -152,7 +152,6 @@ export def action [
 ] {
 	match $action {
 		change-workspace => { change-workspace $args.0 $args.1 }
-		movefocus => { movefocus $args.0 }
 	}
 }
 
@@ -164,27 +163,18 @@ def "change-workspace" [monitor: string, direction: string] {
 	let workspaces = hyprctl workspaces -j
 	| from json
 	| where name !~ special: and monitor == $monitor
-	| sort-by id
+	| sort-by id?
 
 	match $direction {
 		up => {
 			if ($workspaces | where id < $current | is-empty | not $in) {
-				hyprctl dispatch workspace m-1
+				hyprctl dispatch 'hl.dsp.focus({ workspace = "m-1" })'
 			}
 		}
 		down => {
 			if ($workspaces | where id > $current | is-empty | not $in) {
-				hyprctl dispatch workspace m+1
+				hyprctl dispatch 'hl.dsp.focus({ workspace = "m+1" })'
 			}
 		}
-	}
-}
-
-def "movefocus" [direction: string] {
-	let old_window = hyprctl activewindow -j | from json | get address
-	hyprctl dispatch hy3:movefocus $direction
-	let new_window = hyprctl activewindow -j | from json | get address
-	if $old_window == $new_window {
-		hyprctl dispatch movefocus $direction
 	}
 }

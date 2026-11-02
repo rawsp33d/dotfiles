@@ -18,7 +18,7 @@ def main [
 	}
 	| if $type {
 		if $focus {
-			hyprctl dispatch focuscurrentorlast
+			hyprctl dispatch 'hl.dsp.focus({ last = true })'
 		}
 		wlrctl keyboard type $in
 	} else {}

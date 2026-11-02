@@ -29,17 +29,17 @@
         :visible {ws.monitor == monitor.name}
         :class `ws ${ws.id == workspace.id ? "current" : ""}`
         :tooltip `${ws.lastwindowtitle}`
-        :onclick `hyprctl dispatch workspace ${ws.name}`
-        :onrightclick `hyprctl dispatch moveworkspacetomonitor name:${ws.name} -1`
-        :onmiddleclick `hyprctl dispatch closewindow address:${ws.lastwindow}`
+        :onclick `hyprctl dispatch 'hl.dsp.focus({ workspace = "${ws.name}" })'`
+        :onrightclick `hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "name:${ws.name}", monitor = "-1" })'`
+        :onmiddleclick `hyprctl dispatch 'hl.dsp.window.close({ window = "address:${ws.lastwindow}" })'`
         `${ws.id}: ${ws.name}`))))
 
 ; TODO: notifications
 (defwidget bar [monitor]
   (eventbox
     :cursor "pointer"
-    :onscroll `hyprctl dispatch focusmonitor ${monitor.name}; nu -l -c 'hyprmon action change-workspace ${monitor.name} {}'`
-    :onclick `hyprctl dispatch focusmonitor ${monitor.name}`
+    :onscroll `hyprctl dispatch 'hl.dsp.focus({ monitor = "${monitor.name}" })'; nu -l -c 'hyprmon action change-workspace ${monitor.name} {}'`
+    :onclick `hyprctl dispatch 'hl.dsp.focus({ monitor = "${monitor.name}" })'`
     (centerbox
       (workspaces :monitor monitor)
       (label
@@ -61,14 +61,14 @@
         (box
           (button
             :class `${(urgent.active == true) ? "active" : ""}`
-            :onclick `hyprctl dispatch focuswindow address:${urgent.address}`
+            :onclick `hyprctl dispatch 'hl.dsp.focus({ window = "address:${urgent.address}" })'`
             :onrightclick `notify-send urgent "[${urgent.address}] ${urgent.title}"`
             "!")
           (button
             :class `${(arraylength(scratch) > 0) ? "active" : ""}`
-            :onclick `hyprctl dispatch togglespecialworkspace scratch`
-            :onrightclick `hyprctl dispatch workspace 12`
-            :onmiddleclick `hyprctl dispatch workspace name:void`
+            :onclick `hyprctl dispatch 'hl.dsp.workspace.toggle_special("scratch")'`
+            :onrightclick `hyprctl dispatch 'hl.dsp.focus({ workspace = 12 })'`
+            :onmiddleclick `hyprctl dispatch 'hl.dsp.focus({ workspace = "name:void" })'`
             "scratch"))))))
 
 (defwidget clipboard []
@@ -92,7 +92,7 @@
           :class `${mode != "NORMAL" ? "abnormal" : ""}`
           :text mode)
         (eventbox
-          :onclick "hyprctl dispatch exec pavucontrol"
+          :onclick `hyprctl dispatch 'hl.dsp.exec_cmd("pavucontrol")'`
           :onrightclick "nu -l -c 'cfg volume !'"
           :onmiddleclick "nu -l -c 'cfg mic !'"
           "VOL ${volume} ${mic}")

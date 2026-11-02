@@ -65,10 +65,10 @@ local mode = barf.var("mode"):set("NORMAL")
 local ws = barf.workspaces({
 	active_color = "#89b4fa",
 })
-	:click([[hyprctl dispatch workspace {} | ignore]])
-	:right_click([[hyprctl dispatch moveworkspacetomonitor "name:{}" -1 | ignore]])
+	:click([[hyprctl dispatch 'hl.dsp.focus({ workspace = "{}" })' | ignore]])
+	:right_click([[hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "name:{}", monitor = "-1" })' | ignore]])
 	-- TODO: abstract working with hyprctl
-	:middle_click([[hyprctl workspaces -j | from json | where name == "{}" | get 0.lastwindow | hyprctl dispatch closewindow $"address:($in)" | ignore]])
+	:middle_click([[hyprctl workspaces -j | from json | where name == "{}" | get 0.lastwindow | hyprctl dispatch $"hl.dsp.window.close\({ window = 'address:($in)' })" | ignore]])
 
 local clipboard = barf.var("clipboard")
 	:poll(function()
@@ -125,7 +125,7 @@ function top_bar:scroll(dir)
 		let current = (hyprctl monitors -j | from json | where id == %d | get activeWorkspace.id | get 0)
 		let workspaces = (hyprctl workspaces -j | from json | where monitorID == %d and name !~ special | sort-by id | get id)
 		let can_move = if "%s" == "down" { $workspaces | any {|w| $w < $current} } else { $workspaces | any {|w| $w > $current} }
-		if $can_move { hyprctl dispatch focusmonitor %d; hyprctl dispatch workspace m%s1 | ignore }
+		if $can_move { hyprctl dispatch 'hl.dsp.focus({ monitor = %d })'; hyprctl dispatch 'hl.dsp.focus({ workspace = "m%s1" })' | ignore }
 	]] % { self.monitor.id, self.monitor.id, dir, self.monitor.id, sign })
 end
 
