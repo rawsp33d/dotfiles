@@ -1,8 +1,22 @@
+(defhands
+	(left  tab q w e r t caps a s d f g lsft z x c v b)
+	(right y u i o p [ ] \ h j k l ; ' ret n m , . / rsft)
+)
+
+(deftemplate hrm (tap hold neutral)
+	(tap-hold-opposite-hand-release $hold-timeout $tap $hold (timeout hold) (unknown-hand hold) (require-prior-idle 150) $neutral (neutral hold))
+)
+
 (defalias
 	erm (layer-switch ermak)
 
-	lsft (multi lsft (layer-while-held ermak-shifted))
-	rsft (multi rsft (layer-while-held ermak-shifted))
+	;; super+shift skips the shifted layer
+	lsft (fork (multi lsft (layer-while-held ermak-shifted)) lsft (lmet rmet))
+	rsft (fork (multi rsft (layer-while-held ermak-shifted)) rsft (lmet rmet))
+	osr (multi (one-shot $one-shot rsft) (one-shot $one-shot (layer-while-held ermak-shifted)))
+
+	xsy (tap-hold-release $tap-timeout $hold-timeout tab (layer-while-held sym))
+	xnv (tap-hold-release $tap-timeout $hold-timeout ret (layer-while-held nav))
 
 	xcp (tap-hold-release $tap-timeout $hold-timeout esc lctl)
 	xsu (tap-hold-release $tap-timeout $hold-timeout M-A-spc lmet)
@@ -22,14 +36,14 @@
 		(lsft rsft)
 	)
 
-	hml (tap-hold-release 200 200 g lmet)
-	hal (tap-hold-release 200 200 x lalt)
-	hcl (tap-hold-release 200 200 j lctl)
-	hsl (tap-hold-release 200 200 k @lsft)
-	hsr (tap-hold-release 200 200 r @rsft)
-	hcr (tap-hold-release 200 200 m rctl)
-	har (tap-hold-release 200 200 f ralt)
-	hmr (tap-hold-release 200 200 p rmet)
+	hml (t! hrm g lmet (neutral-keys x c v))
+	hal (t! hrm x lalt (neutral-keys z c v f))
+	hcl (t! hrm j lctl (neutral-keys z x v))
+	hsl (t! hrm k @lsft (neutral-keys z x c a))
+	hsr (t! hrm r @rsft (neutral-keys , . /))
+	hcr (t! hrm m rctl (neutral-keys m . /))
+	har (t! hrm f ralt (neutral-keys m , /))
+	hmr (t! hrm p rmet (neutral-keys m , .))
 )
 
 (deflayer ermak
@@ -37,8 +51,8 @@
 	[     _    _    _    _    _    _    _    _    _    _    ]     `   _   _    _    _     _    _    _    _
 	_     b    y    o    u    '    S-'  l    d    w    v    z     S-/ S-3 _    _    _     _    _    _    _
 	@xcp  c    i    e    a    ,    .    h    t    s    n    q     _                       _    _    _
-	@lsft @hml @hal @hcl @hsl -    /    @hsr @hcr @har @hmr @rsft              _          _    _    _    _
-	_     @lyr _              _              @xsu _    @spr @xtp          _    _    _     _    _
+	@lsft @hml @hal @hcl @hsl -    /    @hsr @hcr @har @hmr @osr               _          _    _    _    _
+	_     @lyr @xsy           _              @xsu _    @spr @xnv          _    _    _     _    _
 
 	#| mute  |# (cmd nu -c "~/bin/cfg volume !")
 	#| volu  |# (cmd nu -c "~/bin/cfg volume +5")

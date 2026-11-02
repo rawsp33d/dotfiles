@@ -1,0 +1,14 @@
+(defalias
+	sel (macro C-rght C-left C-S-rght)
+)
+
+(deflayer nav
+	_    _    _    _    _    _    _    _    _    _    _    _    _          _    _    _
+	_    f1   f2   f3   f4   f5   _    _    mmid _    _    _    _    _     _    _    _     _    _    _    _
+	f11  @mw← mrgt @ms↑ mlft @mw→ _    mlft up   mrgt _    _    _    _     _    _    _     _    _    _    _
+	_    mlft @ms← @ms↓ @ms→ mlft home left down rght end  @sel _                          _    _    _
+	lsft mrgt _    @mw↓ @mw↑ mrgt \    pgup pgdn menu _    rsft                 _          _    _    _    _
+	_    _    _              del            _    _    _    _               _    _    _     _    _
+
+	_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+)

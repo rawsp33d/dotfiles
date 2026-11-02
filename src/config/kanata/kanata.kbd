@@ -19,10 +19,12 @@
 (include ./layers/macros.kbd)
 (include ./layers/media.kbd)
 (include ./layers/mouse.kbd)
+(include ./layers/nav.kbd)
 (include ./layers/notify.kbd)
 (include ./layers/numbers.kbd)
 (include ./layers/qwerty.kbd)
 (include ./layers/super.kbd)
+(include ./layers/sym.kbd)
 (include ./layers/system.kbd)
 (include ./layers/typing.kbd)
 
@@ -37,7 +39,6 @@
 ;; -? wm
 ;; -? terminal
 ;; - symbols (greek, math, programming, eng)
-;; - arrows / vim-ish
 ;; - generate help for current layer or something
 ;; - services (restart logid for example)
 ;; - starting/restarting/killing common processes (ex: killing zoom, restarting steam)

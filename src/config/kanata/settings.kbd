@@ -2,6 +2,7 @@
 	danger-enable-cmd yes
 	delegate-to-first-layer yes
 	process-unmapped-keys yes
+	linux-device-detect-mode keyboard-only
 	linux-dev-names-exclude (
 		"Ryan Neff Sofle Pico"
 		"Ryan Neff Sofle Pico Keyboard"

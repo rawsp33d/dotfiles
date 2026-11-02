@@ -1,0 +1,10 @@
+(deflayer sym
+	_    _    _    _    _    _    _    _    _    _    _    _    _          _    _    _
+	_    f1   f2   S-,  S-.  S-`  ins  \    S-,  S-.  ;    =    _    _     _    _    _     _    _    _    _
+	S-\  S-6  S-3  S-[  S-]  S-4  S-5  kp7  kp8  kp9  kp*  _    _    _     _    _    _     _    _    _    _
+	@cw  S-;  =    S-9  S-0  S-7  kp.  kp4  kp5  kp6  kp+  S--  _                          _    _    _
+	lsft S-1  S-2  [    ]    S--  kp/  kp1  kp2  kp3  kp-  rsft                 _          _    _    _    _
+	_    _    _              _              kp0  ,    _    _               _    _    _     _    _
+
+	_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+)
