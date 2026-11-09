@@ -21,6 +21,7 @@ export alias p = paru
 
 # git
 export alias g = git
+export alias gu = gitui
 export alias tigs = tig status
 export alias tigr = tig $"(git rev-parse HEAD | str trim)..(git rev-parse FETCH_HEAD | str trim)"
 
@@ -32,13 +33,6 @@ export alias d = zoxide query
 
 # asdf
 export alias ciea = asdf
-
-##
-## ENV
-##
-
-# TODO: consider migrating to an env
-export alias sshc = ssh -i ~/.ssh/cuda
 
 ##
 ## MISC

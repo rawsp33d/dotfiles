@@ -165,15 +165,16 @@ export def main [] {
 			only_buffer_difference: true
 			marker: ". "
 			type: {
-				layout: list
+				layout: columnar
+				columns: 1
 			}
 			style: {
 				text: green
 				selected_text: green_reverse
 				description_text: yellow
 			}
-			source: { |buffer, position|
-				fd --type f --hidden | rg $buffer
+			source: { |token|
+				fd --type f --hidden | rg $token.text
 				| lines
 				| each { { value: $in } }
 			}
@@ -184,15 +185,16 @@ export def main [] {
 			only_buffer_difference: true
 			marker: "/ "
 			type: {
-				layout: list
+				layout: columnar
+				columns: 1
 			}
 			style: {
 				text: green
 				selected_text: green_reverse
 				description_text: yellow
 			}
-			source: { |buffer, position|
-				fd --type d --hidden | rg $buffer
+			source: { |token|
+				fd --type d --hidden | rg $token.text
 				| lines
 				| each { |it| { value: $it } }
 			}

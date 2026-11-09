@@ -27,9 +27,9 @@
     (for ws in workspaces
       (button
         :visible {ws.monitor == monitor.name}
-        :class `ws ${ws.id == workspace.id ? "current" : ""}`
+        :class `ws ${ws.address == workspace.address ? "current" : ""}`
         :tooltip `${ws.lastwindowtitle}`
-        :onclick `hyprctl dispatch 'hl.dsp.focus({ workspace = "${ws.name}" })'`
+        :onclick `hyprctl dispatch 'hl.dsp.focus({ workspace = "${ws.address}" })'`
         :onrightclick `hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "name:${ws.name}", monitor = "-1" })'`
         :onmiddleclick `hyprctl dispatch 'hl.dsp.window.close({ window = "address:${ws.lastwindow}" })'`
         `${ws.id}: ${ws.name}`))))

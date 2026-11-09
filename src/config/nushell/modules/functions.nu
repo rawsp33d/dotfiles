@@ -248,3 +248,50 @@ export def sdd [
 	}
 	sd $pattern $replace ...(rg -l $pattern | lines)
 }
+
+# Browse patches from the repo: enter applies, v reverts, t toggles applied, y copies the subject, p copies the path, r refreshes
+export def patches [dir: path = .] {
+	let state = $nu.data-dir | path join patches.nuon
+	let load = {|| if ($state | path exists) { open $state } else { {} } }
+	let rows = {||
+		let applied = do $load
+		ls $dir | sort-by name | each {|patch|
+			let mark = $applied | get -o $patch.name
+			{
+				name: ($patch.name | path basename)
+				applied: (if $mark.at? == $patch.modified { $mark.applied } else {
+					git apply --check --reverse $patch.name | complete | $in.exit_code == 0
+				})
+				head: (open --raw $patch.name | lines | take while { $in !~ '^diff ' } | str replace 'Subject: ' '' | str join "\n")
+				path: $patch.name
+				modified: $patch.modified
+			}
+		}
+	}
+	let mark = {|row, applied|
+		do $load | upsert $row.path {at: $row.modified, applied: $applied} | save -f $state
+		do $rows
+	}
+	let apply = {|row, ...flags|
+		let result = git apply ...$flags $row.path | complete
+		if $result.exit_code != 0 { error make {msg: ($result.stderr | lines | first)} }
+		do $mark $row ($flags | is-empty)
+	}
+	do $rows
+	| tui split --vertical --ratio 70 [
+		(tui split [
+			(tui table --columns [name applied] --on-select {|state| $"(ansi title)($state.selected.name)(ansi st)" | save --raw --append /dev/tty })
+			(tui preview --title files {|row| COLUMNS=$env.TUI_WIDTH git apply --stat $row.path | str replace -ar '(?m)(\| +\d+ )(\+*)(-*)$' $"${1}(ansi green)${2}(ansi red)${3}(ansi reset)" })
+		])
+		(tui preview {|row| $row.head })
+	]
+	| tui label --status 'enter apply  v revert  t toggle  y subject  p path  r refresh'
+	| tui bind enter {|state| do $apply $state.selected }
+	| tui bind v {|state| do $apply $state.selected '--reverse' }
+	| tui bind t {|state| do $mark $state.selected (not $state.selected.applied) }
+	| tui bind r $rows
+	| tui bind y {|state| $state.selected.head | lines | first | str replace 'Subject: ' '' | wl-copy o+e> /dev/null }
+	| tui bind p {|state| $state.selected.path | wl-copy o+e> /dev/null }
+	| tui run --refresh 2min $rows
+	| ignore
+}
