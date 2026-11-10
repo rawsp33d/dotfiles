@@ -40,7 +40,7 @@ keybinds:
     - action: [SwitchToMode: tab,]
       key: [Char: "t",]
     - action: [SwitchToMode: pane,]
-      key: [Char: "b",]
+      key: [Char: "v",]
     - action: [SwitchToMode: move,]
       key: [Char: "m",]
     - action: [SwitchToMode: resize,]

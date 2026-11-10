@@ -113,7 +113,7 @@ config.keys = {
 	-- modes
 	{ mods = "LEADER", key = "a", action = act{ ActivateKeyTable = { name = "app", one_shot = true, replace_current = false } } },
 	{ mods = "LEADER", key = "c", action = "ActivateCopyMode" },
-	{ mods = "LEADER", key = "p", action = act{ ActivateKeyTable = { name = "panes", one_shot = true, replace_current = false } } },
+	{ mods = "LEADER", key = "v", action = act{ ActivateKeyTable = { name = "views", one_shot = true, replace_current = false } } },
 	{ mods = "LEADER", key = "r", action = act{ ActivateKeyTable = { name = "resize", one_shot = false, replace_current = false } } },
 	{ mods = "LEADER", key = "s", action = act{ ActivateKeyTable = { name = "sessions", one_shot = true, replace_current = false } } },
 	{ mods = "LEADER", key = "t", action = act{ ActivateKeyTable = { name = "tabs", one_shot = true, replace_current = false } } },
@@ -166,12 +166,25 @@ config.key_tables.sessions = {
 	{ key = "d", action = act{ DetachDomain = "CurrentPaneDomain" } },
 }
 
+-- offset 0 opens before the current tab, 1 after
+local function spawnTabAt(offset)
+	return wezterm.action_callback(function(win, pane)
+		local idx
+		for _, t in ipairs(win:mux_window():tabs_with_info()) do
+			if t.is_active then idx = t.index end
+		end
+		win:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
+		win:perform_action(act.MoveTab(idx + offset), pane)
+	end)
+end
+
 config.key_tables.tabs = {
 	{ key = "Space", action = "ShowTabNavigator" },
 	{ key = "Tab", action = "ActivateLastTab" },
 	{ key = "`", action = act{ ActivateTab = -1 } },
 
-	{ key = "n", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "n", action = spawnTabAt(1) },
+	{ key = "p", action = spawnTabAt(0) },
 	{ key = "c", action = act{ CloseCurrentTab = { confirm = true } } },
 	{ key = "C", action = act{ CloseCurrentTab = { confirm = false } } },
 
@@ -188,7 +201,7 @@ for i = 1, 9 do
 	table.insert(config.key_tables.tabs, { key = tostring(i), action = act{ ActivateTab = i - 1 } })
 end
 
-config.key_tables.panes = {
+config.key_tables.views = {
 	{ key = "Space", action = act{ PaneSelect = {} } },
 	{ key = "s", action = act{ PaneSelect = { mode = "SwapWithActive" } } },
 

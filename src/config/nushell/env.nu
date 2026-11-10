@@ -21,6 +21,7 @@ $env.PATH = (
 		"/opt/homebrew/bin",
 
 		# lang
+		"~/.oi/bin",
 		"~/.bun/bin",
 		"~/.cargo/bin",
 		"~/.gem/ruby/3.0.0/bin",

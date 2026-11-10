@@ -255,13 +255,19 @@ export def patches [dir: path = .] {
 	let load = {|| if ($state | path exists) { open $state } else { {} } }
 	let rows = {||
 		let applied = do $load
-		ls $dir | sort-by name | each {|patch|
+		let patches = ls $dir | sort-by name
+		let width = $patches.name | path basename | str length | append 0 | math max
+		$patches | each {|patch|
 			let mark = $applied | get -o $patch.name
+			let name = $patch.name | path basename
+			let is_applied = if $mark.at? == $patch.modified { $mark.applied } else {
+				git apply --check --reverse $patch.name | complete | $in.exit_code == 0
+			}
 			{
-				name: ($patch.name | path basename)
-				applied: (if $mark.at? == $patch.modified { $mark.applied } else {
-					git apply --check --reverse $patch.name | complete | $in.exit_code == 0
-				})
+				# tui table splits columns evenly, so fold them into one padded column
+				patch: $"(if $is_applied { '✓' } else { ' ' }) ($name | fill -w $width)  ($patch.modified | date humanize)"
+				name: $name
+				applied: $is_applied
 				head: (open --raw $patch.name | lines | take while { $in !~ '^diff ' } | str replace 'Subject: ' '' | str join "\n")
 				path: $patch.name
 				modified: $patch.modified
@@ -280,7 +286,7 @@ export def patches [dir: path = .] {
 	do $rows
 	| tui split --vertical --ratio 70 [
 		(tui split [
-			(tui table --columns [name applied] --on-select {|state| $"(ansi title)($state.selected.name)(ansi st)" | save --raw --append /dev/tty })
+			(tui table --columns [patch] --on-select {|state| $"(ansi title)($state.selected.name)(ansi st)" | save --raw --append /dev/tty })
 			(tui preview --title files {|row| COLUMNS=$env.TUI_WIDTH git apply --stat $row.path | str replace -ar '(?m)(\| +\d+ )(\+*)(-*)$' $"${1}(ansi green)${2}(ansi red)${3}(ansi reset)" })
 		])
 		(tui preview {|row| $row.head })
