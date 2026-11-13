@@ -255,7 +255,7 @@ export def patches [dir: path = .] {
 	let load = {|| if ($state | path exists) { open $state } else { {} } }
 	let rows = {||
 		let applied = do $load
-		let patches = ls $dir | sort-by name
+		let patches = ls $dir | where type == file and name =~ '\.(patch|diff)$' | sort-by name
 		let width = $patches.name | path basename | str length | append 0 | math max
 		$patches | each {|patch|
 			let mark = $applied | get -o $patch.name
@@ -289,7 +289,7 @@ export def patches [dir: path = .] {
 			(tui table --columns [patch] --on-select {|state| $"(ansi title)($state.selected.name)(ansi st)" | save --raw --append /dev/tty })
 			(tui preview --title files {|row| COLUMNS=$env.TUI_WIDTH git apply --stat $row.path | str replace -ar '(?m)(\| +\d+ )(\+*)(-*)$' $"${1}(ansi green)${2}(ansi red)${3}(ansi reset)" })
 		])
-		(tui preview {|row| $row.head })
+		(tui preview --border frameless {|row| $row.head })
 	]
 	| tui label --status 'enter apply  v revert  t toggle  y subject  p path  r refresh'
 	| tui bind enter {|state| do $apply $state.selected }

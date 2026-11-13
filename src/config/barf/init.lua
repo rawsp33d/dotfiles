@@ -66,9 +66,9 @@ local ws = barf.workspaces({
 	active_color = "#89b4fa",
 })
 	:click([[hyprctl dispatch 'hl.dsp.focus({ workspace = "{}" })' | ignore]])
-	:right_click([[hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "name:{}", monitor = "-1" })' | ignore]])
+	:right_click([[hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "{}", monitor = "-1" })' | ignore]])
 	-- TODO: abstract working with hyprctl
-	:middle_click([[hyprctl workspaces -j | from json | where name == "{}" | get 0.lastwindow | hyprctl dispatch $"hl.dsp.window.close\({ window = 'address:($in)' })" | ignore]])
+	:middle_click([[hyprctl workspaces -j | from json | where id == {} | get 0.lastwindow | hyprctl dispatch $"hl.dsp.window.close\({ window = 'address:($in)' })" | ignore]])
 
 local clipboard = barf.var("clipboard")
 	:poll(function()
