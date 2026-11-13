@@ -1,0 +1,75 @@
+use barf
+
+## Scroll through this monitor's workspaces, `{}` is the direction.
+scroll :: r"""
+	let current = (hyprctl monitors -j | from json | where id == {monitor.id} | get activeWorkspace.id | get 0)
+	let workspaces = (hyprctl workspaces -j | from json | where monitorID == {monitor.id} and name !~ special | sort-by id | get id)
+	let can_move = if "{}" == "down" { $workspaces | any {|w| $w < $current} } else { $workspaces | any {|w| $w > $current} }
+	let sign = if "{}" == "up" { "+" } else { "-" }
+	if $can_move { hyprctl dispatch 'hl.dsp.focus({ monitor = {monitor.id} })'; hyprctl dispatch $'hl.dsp.focus({ workspace = "m($sign)1" })' | ignore }
+	"""
+
+volume_cmd :: r"""$"(ponymix get-volume)%(try { ponymix is-muted; ' [muted]' } catch { '' })" """
+
+main :: fn() {
+	volume :: barf.Var.{
+		name = "volume"
+		listen = r"""pactl subscribe | grep --line-buffered "on sink" """
+		map = volume_cmd
+		poll = volume_cmd
+		every = 5
+	}
+	media :: barf.Var.{
+		name = "media"
+		listen = r"""playerctl --follow metadata --format "[{{status}}] {{artist}} - {{title}}" """
+		map = r"""
+			"{}"
+			| str replace "[Playing] " "▶️ "
+			| str replace "[Paused] " "⏸️ "
+			| str replace "[Stopped] " "⏹️ "
+			"""
+	}
+	title :: barf.Var.{ name = "title", poll = "hyprctl activewindow -j | from json | get title" }
+	mode :: barf.Var.{ name = "mode", value = "NORMAL" }
+	vpn :: barf.Var.{ name = "vpn" }
+	eos :: barf.Var.{ name = "eos.state", poll = "nu -l -c 'eos | to json -r' | nu -c 'from json | get state'", every = 60 }
+	clipboard :: barf.Var.{ name = "clipboard", poll = "wl-paste | lines | first | str substring 0..64", every = 5 }
+
+	ws :: barf.Workspaces.{
+		click = r"""hyprctl dispatch 'hl.dsp.focus({ workspace = "{}" })' | ignore"""
+		right_click = r"""hyprctl dispatch 'hl.dsp.workspace.move({ workspace = "{}", monitor = "-1" })' | ignore"""
+		middle_click = r"""hyprctl workspaces -j | from json | where id == {} | get 0.lastwindow | hyprctl dispatch $"hl.dsp.window.close\({ window = 'address:($in)' })" | ignore"""
+	}
+
+	barf.run(
+		shell = ["nu" "-c"],
+		font_size = "12pt",
+		bars = [
+			.{
+				height = 16,
+				anchors = [.left .right .top],
+				left = [ws],
+				center = [title.label()],
+				right = [barf.date().label(r"🗓️ {}"), barf.clock().label(r"🕑 {}")],
+				scroll = scroll,
+			},
+			.{
+				height = 16,
+				anchors = [.left .right .bottom],
+				left = [
+					mode.label(),
+					volume.label(r"VOL:{}"),
+					barf.Combo.{
+						var = eos,
+						items = ["off" "free" "focus" "busy"],
+						change = r"eos {} | ignore",
+					},
+					vpn.label(r"VPN:{}"),
+					barf.Label.{ text = "lab!", click = "notify-send click left", middle_click = "notify-send click middle", right_click = "notify-send click right" },
+				],
+				center = [media.label()],
+				right = [clipboard.label(r"📋 {}"), barf.cpu().label(r"CPU:{}"), barf.mem().label(r"MEM:{}")],
+			},
+		],
+	)
+}
