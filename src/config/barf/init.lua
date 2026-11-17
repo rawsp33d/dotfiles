@@ -89,7 +89,7 @@ local eos = barf.var("eos")
 	:format("EOS:{}")
 
 local eos = barf.var("eos.state")
-	:poll("nu -l -c 'eos | to json -r' | nu -c 'from json | get state'", { interval = 60 })
+	:poll("nu -l -c 'eos | to json -r' | nu --stdin -c 'from json | get state'", { interval = 60 })
 
 local vpn = barf.var("vpn")
 	-- :poll([[which -a cu]], { interval = 60 })

@@ -105,7 +105,8 @@ end
 
 -- apps
 hl.bind("SUPER + Return", exec(v.terminal))
-hl.bind("SUPER + SHIFT + Return", exec(v.terminal .. " --class _float_"))
+hl.bind("SUPER + CTRL + Return", exec(v.terminal .. " --class _float_"))
+hl.bind("SUPER + SHIFT + Return", exec("ghostty"))
 hl.bind("SUPER + E", exec(v.terminal .. [[ --class _float_ -- nu -l -c "edit-clip --focus | copy"]]))
 hl.bind("SUPER + SHIFT + E", exec(v.terminal .. [[ --class _float_ -- nu -l -c "edit-clip --selection --type --focus"]]))
 hl.bind("SUPER + O", exec(v.menu_app))

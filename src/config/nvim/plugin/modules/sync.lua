@@ -33,6 +33,16 @@ gitsigns.setup({
 			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line(".") })
 		end, [[un/stage line]])
 
+		-- use .-repeat wrapper from gitsigns
+		local name, stage_hunk = debug.getupvalue(gitsigns.stage_hunk, 2)
+		assert(name == "fn", "gitsigns.stage_hunk wrapper changed")
+		hunks:map("<space>", function()
+			vim.o.operatorfunc = function()
+				stage_hunk({ vim.fn.line("'["), vim.fn.line("']") })
+			end
+			return "g@"
+		end, { "n", expr = true, desc = [[un/stage motion]] })
+
 		-- reset hunks
 		hunks:map("r", gitsigns.reset_hunk, [[reset hunk]])
 		hunks:map("r", function()

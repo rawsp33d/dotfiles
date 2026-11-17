@@ -121,8 +121,8 @@ config.keys = {
 
 	-- navigation
 	{ mods = "LEADER", key = "Tab", action = "ActivateLastTab" },
-	{ mods = "CTRL|ALT", key = "p", action = act{ ActivateTabRelative = -1 } },
-	{ mods = "CTRL|ALT", key = "n", action = act{ ActivateTabRelative = 1 } },
+	-- { mods = "CTRL|ALT", key = "p", action = act{ ActivateTabRelative = -1 } },
+	-- { mods = "CTRL|ALT", key = "n", action = act{ ActivateTabRelative = 1 } },
 	{ mods = "CTRL", key = "j", action = act{ ActivatePaneDirection = "Down" } },
 	{ mods = "CTRL", key = "k", action = act{ ActivatePaneDirection = "Up" } },
 	{ mods = "CTRL", key = "h", action = act{ ActivatePaneDirection = "Left" } },

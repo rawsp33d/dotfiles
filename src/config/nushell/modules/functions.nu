@@ -195,26 +195,6 @@ export def hotwire [
 	| sudo ln -sr $in $"($in).($version)"
 }
 
-# Load .env file in current directory.
-export def --env dotenv [
-	file: string = ".env" # The file to load
-] {
-	open $file
-	| lines -s
-	| parse -r `^\s*(?<key>[^\s=]+)\s*=\s*(?<value>[^\s].*)$`
-	| update value {
-		let val = $in
-		let parsed = ($val | parse -r "^(['\"`])(.*)\\1")
-		if ($parsed | length) == 0 {
-			$val
-		} else if ($parsed | length) > 0 {
-			$parsed.capture1.0
-		} else {}
-	}
-	| transpose --header-row --as-record
-	| load-env
-}
-
 def path_segments [] {
 	pwd | split row (char path_sep) | skip
 }
@@ -249,55 +229,69 @@ export def sdd [
 	sd $pattern $replace ...(rg -l $pattern | lines)
 }
 
-# Browse patches from the repo: enter applies, v reverts, t toggles applied, y copies the subject, p copies the path, r refreshes
+# Browse patches in a dir. Keys are listed at the bottom of the TUI.
 export def patches [dir: path = .] {
 	let state = $nu.data-dir | path join patches.nuon
 	let load = {|| if ($state | path exists) { open $state } else { {} } }
 	let rows = {||
-		let applied = do $load
+		let marks = do $load
 		let patches = ls $dir | where type == file and name =~ '\.(patch|diff)$' | sort-by name
 		let width = $patches.name | path basename | str length | append 0 | math max
-		$patches | each {|patch|
-			let mark = $applied | get -o $patch.name
-			let name = $patch.name | path basename
-			let is_applied = if $mark.at? == $patch.modified { $mark.applied } else {
-				git apply --check --reverse $patch.name | complete | $in.exit_code == 0
+		$patches | each {|p|
+			let mark = $marks | get -o $p.name
+			let applied = if $mark.at? == $p.modified { $mark.applied } else {
+				git apply --check --reverse $p.name | complete | $in.exit_code == 0
 			}
-			{
+			$p | merge {
 				# tui table splits columns evenly, so fold them into one padded column
-				patch: $"(if $is_applied { '✓' } else { ' ' }) ($name | fill -w $width)  ($patch.modified | date humanize)"
-				name: $name
-				applied: $is_applied
-				head: (open --raw $patch.name | lines | take while { $in !~ '^diff ' } | str replace 'Subject: ' '' | str join "\n")
-				path: $patch.name
-				modified: $patch.modified
+				patch: $"(if $applied { '✓' } else { ' ' }) ($p.name | path basename | fill -w $width)  ($p.modified | date humanize)"
+				applied: $applied
+				head: (open --raw $p.name | lines | take while { $in !~ '^diff ' } | str replace 'Subject: ' '' | str join "\n")
 			}
 		}
 	}
 	let mark = {|row, applied|
-		do $load | upsert $row.path {at: $row.modified, applied: $applied} | save -f $state
+		do $load | upsert $row.name {at: $row.modified, applied: $applied} | save -f $state
 		do $rows
 	}
 	let apply = {|row, ...flags|
-		let result = git apply ...$flags $row.path | complete
+		let result = git apply ...$flags $row.name | complete
 		if $result.exit_code != 0 { error make {msg: ($result.stderr | lines | first)} }
 		do $mark $row ($flags | is-empty)
 	}
-	do $rows
-	| tui split --vertical --ratio 70 [
-		(tui split [
-			(tui table --columns [patch] --on-select {|state| $"(ansi title)($state.selected.name)(ansi st)" | save --raw --append /dev/tty })
-			(tui preview --title files {|row| COLUMNS=$env.TUI_WIDTH git apply --stat $row.path | str replace -ar '(?m)(\| +\d+ )(\+*)(-*)$' $"${1}(ansi green)${2}(ansi red)${3}(ansi reset)" })
-		])
-		(tui preview --border frameless {|row| $row.head })
+	# tty keys need the terminal (editor, pinentry, pager), so they exit the TUI, run, then reopen it
+	let keys = [[key desc tty run];
+		[enter apply false $apply]
+		[v revert false {|row| do $apply $row '--reverse' }]
+		[t toggle false {|row| do $mark $row (not $row.applied) }]
+		[c commit true {|row|
+			let body = mktemp -t
+			let subject = open --raw $row.name | git mailinfo $body /dev/null | lines | parse 'Subject: {s}' | get 0.s
+			let msg = [$subject (open --raw $body)] | str join "\n\n" | str trim
+			rm $body
+			git commit -S --edit -m $msg
+		}]
+		[a am true {|row| git am -S --committer-date-is-author-date $row.name; do $mark $row true | ignore }]
+		[m msg true {|row| $row.head | ^less -R }]
+		[y copy false {|row| $row.head | lines | first | wl-copy o+e> /dev/null }]
+		[p path false {|row| $row.name | wl-copy o+e> /dev/null }]
+		[r refresh false {|_| do $rows }]
 	]
-	| tui label --status 'enter apply  v revert  t toggle  y subject  p path  r refresh'
-	| tui bind enter {|state| do $apply $state.selected }
-	| tui bind v {|state| do $apply $state.selected '--reverse' }
-	| tui bind t {|state| do $mark $state.selected (not $state.selected.applied) }
-	| tui bind r $rows
-	| tui bind y {|state| $state.selected.head | lines | first | str replace 'Subject: ' '' | wl-copy o+e> /dev/null }
-	| tui bind p {|state| $state.selected.path | wl-copy o+e> /dev/null }
-	| tui run --refresh 2min $rows
-	| ignore
+	let help = $keys | each { $"($in.key) ($in.desc)" } | str join '  '
+	loop {
+		let ui = do $rows | tui split --vertical --sizes [70% 1fr 2] [
+			(tui split [
+				(tui table --columns [patch] --on-select {|state| $"(ansi title)($state.selected.name | path basename)(ansi st)" | save --raw --append /dev/tty })
+				(tui preview --title files {|row| COLUMNS=$env.TUI_WIDTH git apply --stat $row.name | str replace -ar '(?m)(\| +\d+ )(\+*)(-*)$' $"${1}(ansi green)${2}(ansi red)${3}(ansi reset)" })
+			])
+			# a label has no border, so wrapped text copies without a margin
+			(tui label {|row| $row.head | fold -s -w $env.TUI_WIDTH })
+			(tui label {|_| $help | fold -s -w $env.TUI_WIDTH | lines | str trim | str join "\n" })
+		]
+		let result = $keys
+		| reduce -f $ui {|k, ui| $ui | tui bind $k.key {|state| if $k.tty { {action: submit, selected: {run: $k.run, row: $state.selected}} } else { do $k.run $state.selected } } }
+		| tui run --refresh 2min $rows
+		if $result.action != submit or $result.selected.row == null { break }
+		do $result.selected.run $result.selected.row
+	}
 }

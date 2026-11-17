@@ -1,9 +1,16 @@
 hl.config({
 	general = {
-		-- plugins load after the first parse, hyprpm reload re-parses
 		layout = hl.plugin.hy3 and "hy3" or "dwindle",
+
 		gaps_in = 0,
 		gaps_out = 0,
+
+		border_size = 2,
+
+		col = {
+			active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
+			inactive_border = "rgba(595959aa)",
+		},
 	},
 
 	input = {
@@ -37,6 +44,15 @@ hl.config({
 
 	dwindle = {
 		smart_split = true,
+	},
+
+	decoration = {
+		rounding = 4,
+		rounding_power = 2,
+	},
+
+	animations = {
+		enabled = true,
 	},
 })
 
